@@ -1234,11 +1234,18 @@ queue_job(TS, From, #queue{max_size = MaxSz} = Q, S) ->
     if CurSz >= MaxSz ->
             case q_timedout(Q) of
                 [] ->
-                    reject(From);
+                    reject(From),
+                    S;
                 {OldJobs, Q1} ->
-                    [timeout(J) || J <- OldJobs],
-                    %% update_queue(q_in(TS, From, Q1), S)
-                    job_queued(q_in(TS, From, Q1), CurSz, TS, S)
+                    case OldJobs of
+                        [] ->
+                            reject(From),
+                            S;
+                        Jobs ->
+                            [timeout(J) || J <- Jobs],
+                            %% update_queue(q_in(TS, From, Q1), S)
+                            job_queued(q_in(TS, From, Q1), CurSz, TS, S)
+                    end
             end;
        true ->
             %% update_queue(q_in(TS, From, Q), S)
