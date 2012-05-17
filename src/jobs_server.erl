@@ -389,7 +389,7 @@ init_regulators(Rs, #queue{name = Qname} = Q) ->
 						owner = Qname}), {Rx,Cx+1}};
 		   ({named_counter, Name, Incr}, {Rx,Cx}) when is_integer(Incr) ->
 			{#counter{name = Name, increment = Incr}, {Rx,Cx+1}};
-		   ({group_rate, R} = Link, Acc) when is_atom(R) ->
+		   ({group_rate, R} = Link, Acc) ->
 			{Link, Acc}
 		   %% ({counter, R} = Link, Acc) when is_atom(R) ->
 		   %% 	{Link, Acc}
